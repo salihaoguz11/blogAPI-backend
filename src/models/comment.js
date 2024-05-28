@@ -1,5 +1,5 @@
 "use strict";
-
+const mongoose = require("mongoose");
 /* -------------------------------------------------------
     EXPRESSJS - BLOG Project with Mongoose
 ------------------------------------------------------- */
@@ -13,7 +13,7 @@ const commentSchema = new mongoose.Schema(
     },
     blogId: {
       type: mongoose.Schema.ObjectId, // Relational ObjectId
-      ref: "BlogPost", // ModelName
+      ref: "Blog", // ModelName
       required: true,
     },
     comment: {

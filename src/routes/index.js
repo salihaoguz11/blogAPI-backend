@@ -14,9 +14,9 @@ const router = require("express").Router();
 // //users
 // router.use("/users", require("./user"));
 // //comment
-// router.use("/comments", require("./comment"));
+router.use("/comments", require("./comment"));
 // //category
-// router.use("/categories", require("./category"));
+router.use("/categories", require("./category"));
 //blog
 router.use("/", require("./blog"));
 //token
