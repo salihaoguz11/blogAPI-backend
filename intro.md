@@ -28,3 +28,16 @@ _/
 "email": "admin1@site.com",
 "isAdmin": true
 }
+
+{
+\_id: new ObjectId('665b2328a5dbc80be736bb93'),
+username: 'admin1',
+email: 'admin1@site.com',
+password: '597a4d0b1c91bf326e8d3ce7e0ffd94204b9ded3f2ecdd4bb5b89161c09d9066',
+isActive: true,
+isStaff: false,
+isAdmin: true,
+createdAt: 2024-06-01T13:33:28.177Z,
+updatedAt: 2024-06-01T13:33:28.177Z,
+\_\_v: 0
+}

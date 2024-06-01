@@ -42,6 +42,7 @@ module.exports = {
   // CRUD ->
 
   create: async (req, res) => {
+    req.body.userId = req.user._id;
     const data = await Blog.create(req.body);
 
     res.status(201).send({
@@ -67,6 +68,7 @@ module.exports = {
     // const customFilter = (req.user?.isAdmin ? {} : { _id: req.user._id }) && {
     //   _id: req.params.blogId,
     // };
+    req.body.userId = req.user._id;
     const data = await Blog.updateOne({ _id: req.params.blogId }, req.body, {
       runValidators: true,
     });

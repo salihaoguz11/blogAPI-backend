@@ -18,6 +18,7 @@ router
   .route("/blogs/:blogId")
   .get(permissions.isLogin, blog.read)
   .put(permissions.isLogin, blog.update)
+  .patch(permissions.isLogin, blog.update)
   .delete(permissions.isLogin, blog.delete);
 
 router.get("/category/:categoryId/posts", blog.listCategoryPosts);
