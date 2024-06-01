@@ -13,31 +13,45 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       unique: true,
       required: true,
+      index: true,
     },
-
     email: {
       type: String,
       trim: true,
       unique: true,
+      index: true,
       required: [true, "Email field must be required."],
       validate: [
         (email) => email.includes("@") && email.includes("."), // ValidationCheck
         "Email type is incorrect.", // If false Message.
       ],
     },
-
     password: {
       type: String,
       trim: true,
       required: true,
       set: (password) => passwordEncrypt(password),
     },
-
-    firstName: String,
-
-    lastName: String,
-    isActive: Boolean,
-    isStaff: Boolean,
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    isStaff: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     collection: "users",

@@ -10,9 +10,9 @@ const router = require("express").Router();
 
 // URL: /
 //auth
-// router.use("/auth", require("./auth"));
+router.use("/auth", require("./auth"));
 // //users
-// router.use("/users", require("./user"));
+router.use("/users", require("./user"));
 // //comment
 router.use("/comments", require("./comment"));
 // //category

@@ -16,7 +16,7 @@ const express = require("express");
 const app = express();
 
 require("dotenv").config();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 const HOST = process.env.HOST || "127.0.0.1";
 
 /* ------------------------------------------------------- */
@@ -65,6 +65,6 @@ app.use(require("./src/routes"));
 // require('./src/sync')()
 
 // errorHandler:
-app.use(require("./src/errorHandler"));
+app.use(require("./src/middlewares/errorHandler"));
 
 app.listen(PORT, HOST, () => console.log(`http://${HOST}:${PORT}`));
