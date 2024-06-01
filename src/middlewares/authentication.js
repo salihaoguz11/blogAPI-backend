@@ -31,7 +31,7 @@ module.exports = async (req, res, next) => {
       jwt.verify(tokenKey[1], process.env.ACCESS_KEY, (error, data) => {
         // //? Hata gösterimi yok:
         req.user = data;
-        console.log(req.user);
+        // console.log(req.user);
       });
     }
   }

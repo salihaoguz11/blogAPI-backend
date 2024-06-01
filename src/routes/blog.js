@@ -5,7 +5,7 @@
 const router = require("express").Router();
 
 // Call permissions
-const permissions = require("../middlewares/permissons");
+const permissions = require("../middlewares/permissions");
 
 // Call Controllers:
 const blog = require("../controllers/blog");

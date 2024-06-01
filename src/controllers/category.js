@@ -50,7 +50,7 @@ module.exports = {
     const data = await Category.updateOne(
       { _id: req.params.categoryId },
       req.body,
-      { runValidayiors: true }
+      { runValidatiors: true }
     );
 
     res.status(202).send({

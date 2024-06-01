@@ -25,7 +25,7 @@ module.exports = {
     if (req.user && req.user?.isAdmin && req.user.isActive) {
       next();
     } else {
-      res.errorStatusCode(403).send("No permission: You must be admin");
+      res.status(403).send("No permission: You must be admin");
     }
   },
 };
