@@ -40,6 +40,8 @@ require("./src/configs/dbConnection");
 app.use(express.json());
 
 // Middlewares
+// Check Authentication:
+app.use(require("./src/middlewares/authentication"));
 //Searching&Sorting&Pagination:
 app.use(require("./src/middlewares/findSearchSortPage"));
 

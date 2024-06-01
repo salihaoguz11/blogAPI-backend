@@ -11,6 +11,7 @@ module.exports = {
     // set passive
     // return next() -> çalıştırma pass geç
 
+    // req user içerisinde bilgi varsa ve bu kullanıcı banlanmadıysa o zaman isLogindir. Geçiş izni ver. Devam et.yoksa 403 hata kodu yolla.
     if (req.user && req.user.isActive) {
       next();
     } else {
