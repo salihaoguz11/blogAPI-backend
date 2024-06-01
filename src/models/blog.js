@@ -12,7 +12,6 @@ const blogSchema = new mongoose.Schema(
     blogCategoryId: {
       type: mongoose.Schema.ObjectId,
       ref: "Category",
-      // model ismi yazılır
       required: true,
     },
     title: {
@@ -33,22 +32,24 @@ const blogSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    likedBy: {
-      // Kullanıcıların kimliklerini tutan dizi
-      type: [mongoose.Schema.ObjectId],
-      ref: "User",
-      default: [],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    views: {
+      type: Number,
+      default: 0,
     },
+    viewers: [
+      {
+        type: String,
+        // gelen ip
+      },
+    ],
   },
   { collection: "blogs", timestamps: true }
 );
-
-// Virtual Property for likes count
-blogSchema.virtual("likesCount").get(function () {
-  return this.likedBy.length;
-});
-
-// Ensure index for performance boost on 'likedBy'
-blogSchema.index({ likedBy: 1 });
 
 module.exports = mongoose.model("Blog", blogSchema);

@@ -17,6 +17,19 @@ const Blog = require("../models/blog");
 // ------------------------------------------
 module.exports = {
   list: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "List all blogs"
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          count: 0,
+          details: {},
+          result: [],
+        }
+      }
+    */
     const data = await res.getModelList(Blog, {}, ["blogCategoryId", "userId"]);
 
     res.status(200).send({
@@ -28,6 +41,24 @@ module.exports = {
   },
 
   listCategoryPosts: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "List blogs by category"
+      #swagger.parameters['categoryId'] = {
+        in: 'path',
+        description: 'Category ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          count: 0,
+          result: [],
+        }
+      }
+    */
     const data = await Blog.find({
       blogCategoryId: req.params.categoryId,
     }).populate("blogCategoryId");
@@ -42,6 +73,31 @@ module.exports = {
   // CRUD ->
 
   create: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Create a new blog"
+      #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Blog data',
+        required: true,
+        schema: {
+          userId: "string",
+          blogCategoryId: "string",
+          title: "string",
+          content: "string",
+          image: "string",
+          isPublished: true
+        }
+      }
+      #swagger.responses[201] = {
+        description: "Blog created successfully",
+        schema: {
+          error: false,
+          body: {},
+          result: {},
+        }
+      }
+    */
     req.body.userId = req.user._id;
     const data = await Blog.create(req.body);
 
@@ -53,18 +109,85 @@ module.exports = {
   },
 
   read: async (req, res) => {
-    const data = await Blog.findOne({ _id: req.params.blogId }).populate([
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Get blog details"
+      #swagger.parameters['blogId'] = {
+        in: 'path',
+        description: 'Blog ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          result: {},
+          views: 0
+        }
+      }
+      #swagger.responses[404] = {
+        description: "Blog not found",
+        schema: {
+          error: true,
+          message: "Blog not found",
+        }
+      }
+    */
+
+    const blog = await Blog.findOne({ _id: req.params.blogId }).populate([
       "blogCategoryId",
       "userId",
     ]); // get Primary Data
 
+    if (!blog) {
+      return res.status(404).send({
+        error: true,
+        message: "Blog not found",
+      });
+    }
+    if (!blog.viewers.includes(req.ip)) {
+      (blog.views += 1), blog.viewers.push(req.ip);
+      await blog.save();
+    }
     res.status(200).send({
       error: false,
-      result: data,
+      result: blog,
+      views: blog.views,
     });
   },
 
   update: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Update a blog"
+      #swagger.parameters['blogId'] = {
+        in: 'path',
+        description: 'Blog ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Blog data',
+        required: true,
+        schema: {
+          title: "string",
+          content: "string",
+          image: "string",
+          isPublished: true
+        }
+      }
+      #swagger.responses[202] = {
+        description: "Blog updated successfully",
+        schema: {
+          error: false,
+          body: {},
+          result: {},
+          newData: {}
+        }
+      }
+    */
     // const customFilter = (req.user?.isAdmin ? {} : { _id: req.user._id }) && {
     //   _id: req.params.blogId,
     // };
@@ -82,7 +205,106 @@ module.exports = {
   },
 
   delete: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Delete a blog"
+      #swagger.parameters['blogId'] = {
+        in: 'path',
+        description: 'Blog ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[204] = {
+        description: "Blog deleted successfully"
+      }
+      #swagger.responses[404] = {
+        description: "Blog not found",
+        schema: {
+          error: true,
+          message: "Blog not found",
+        }
+      }
+    */
     const data = await Blog.deleteOne({ _id: req.params.blogId });
     res.sendStatus(data.deletedCount >= 1 ? 204 : 404);
+  },
+
+  getLike: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Get like info"
+      #swagger.parameters['blogId'] = {
+        in: 'path',
+        description: 'Blog ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          didUserLike: false,
+          countOfLikes: 0,
+          likes: [],
+        }
+      }
+    */
+
+    const blog = await Blog.findById(req.params.blogId).select("likes");
+
+    const didUserLike = blog.likes.includes(req.user.id);
+
+    res.status(200).send({
+      error: false,
+      didUserLike: didUserLike,
+      countOfLikes: blog.likes.length,
+      likes: blog.likes,
+    });
+  },
+
+  postLike: async (req, res) => {
+    /*
+      #swagger.tags = ["Blogs"]
+      #swagger.summary = "Add/Remove like"
+      #swagger.parameters['blogId'] = {
+        in: 'path',
+        description: 'Blog ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          didUserLike: true,
+          countOfLikes: 0,
+          likes: [],
+        }
+      }
+    */
+
+    const blog = await Blog.findById(req.params.blogId).select("likes");
+    const didUserLike = blog.likes.includes(req.user.id);
+
+    if (!didUserLike) {
+      await Blog.updateOne(
+        { _id: req.params.blogId },
+        { $addToSet: { likes: req.user.id } }
+      );
+    } else {
+      await Blog.updateOne(
+        { _id: req.params.blogId },
+        { $pull: { likes: req.user.id } }
+      );
+    }
+    const updatedBlog = await Blog.findById(req.params.blogId).select("likes");
+    const updatedDidUserLike = updatedBlog.likes.includes(req.user.id);
+
+    res.status(200).send({
+      error: false,
+      didUserLike: updatedDidUserLike,
+      countOfLikes: updatedBlog.likes.length,
+      likes: updatedBlog.likes,
+    });
   },
 };

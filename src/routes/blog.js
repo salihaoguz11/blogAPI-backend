@@ -21,6 +21,11 @@ router
   .patch(permissions.isLogin, blog.update)
   .delete(permissions.isLogin, blog.delete);
 
+router.route("/blogs/:blogId/getLike").get(permissions.isLogin, blog.getLike);
+router
+  .route("/blogs/:blogId/postLike")
+  .post(permissions.isLogin, blog.postLike);
+
 router.get("/category/:categoryId/posts", blog.listCategoryPosts);
 
 module.exports = router;
