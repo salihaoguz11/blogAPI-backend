@@ -20,7 +20,7 @@
     "morgan": "^1.10.0",
     "redoc-express": "^2.1.0",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "^5.0.1",
     "tinymce": "^6.7.2"
   }
 }
