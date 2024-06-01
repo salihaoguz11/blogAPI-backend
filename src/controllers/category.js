@@ -19,6 +19,18 @@ const Category = require("../models/category");
 
 module.exports = {
   list: async (req, res) => {
+    /*
+      #swagger.tags = ["Categories"]
+      #swagger.summary = "List all categories"
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          count: 0,
+          result: [],
+        }
+      }
+    */
     const data = await res.getModelList(Category);
 
     res.status(200).send({
@@ -29,6 +41,26 @@ module.exports = {
   },
 
   create: async (req, res) => {
+    /*
+      #swagger.tags = ["Categories"]
+      #swagger.summary = "Create a new category"
+      #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Category data',
+        required: true,
+        schema: {
+          name: "string",
+        }
+      }
+      #swagger.responses[201] = {
+        description: "Category created successfully",
+        schema: {
+          error: false,
+          body: {},
+          result: {},
+        }
+      }
+    */
     const data = await Category.create(req.body);
 
     res.status(201).send({
@@ -39,6 +71,30 @@ module.exports = {
   },
 
   read: async (req, res) => {
+    /*
+      #swagger.tags = ["Categories"]
+      #swagger.summary = "Get category details"
+      #swagger.parameters['categoryId'] = {
+        in: 'path',
+        description: 'Category ID',
+        required: true,
+        type: 'string'
+      }
+      #swagger.responses[200] = {
+        description: "Successful operation",
+        schema: {
+          error: false,
+          result: {},
+        }
+      }
+      #swagger.responses[404] = {
+        description: "Category not found",
+        schema: {
+          error: true,
+          message: "Category not found",
+        }
+      }
+    */
     const data = await Category.findOne({ _id: req.params.categoryId });
 
     res.status(200).send({
